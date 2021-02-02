@@ -66,13 +66,13 @@ struct Tetramino{
 	
 	Tetramino(uint8_t type, uint8_t color){
 		this->i=0;
-		this->j=7;
+		this->j=5;
 		for(uint8_t i=0; i<4; i++)
 			for(uint8_t j=0; j<4; j++)
 				this->dots[i][j]=tetratypes[type][i][j]*color;
 	}
 	
-	void rotate(Field* field){
+	void rotate(Field* field){//FIXME
 		uint8_t res[4][4];
 		for (uint8_t i=0; i<4;i++){
 			for (uint8_t j=0; j<4;j++){
@@ -89,7 +89,6 @@ struct Tetramino{
 		}
 		return;
 	}
-	
 	void print(){
 		for(uint8_t i=0; i<4; i++){
 			for(uint8_t j=0; j<4; j++){
@@ -101,8 +100,8 @@ struct Tetramino{
 	void placeto(Field* field){
 		for(uint8_t i=0; i<4; i++){
 			for(uint8_t j=0; j<4; j++){
-				if(this->dots[i][j] && (field->dots[this->i-i][this->j-j] || this->i-i>19 || this->j-j>9)){throw -1;}	//FIXME
-				else {field->dots[this->i-i][this->j-j]=this->dots[i][j];}
+				if(this->dots[i][j] && (field->dots[this->i-3+i][this->j-3+j] || this->i-3+i>19 || this->j-3+j>9)){throw -1;}
+				else {field->dots[this->i-3+i][this->j-3+j]=this->dots[i][j];}
 			}
 		}
 	}
@@ -110,7 +109,7 @@ struct Tetramino{
 	bool is_invalid(uint8_t res[4][4], Field* field){
 		for (uint8_t i=0; i<4; i++){
 			for (uint8_t j=0; j<4; j++){
-				if (this->dots[i][j] && field->dots[this->i-1][this->j-j]){												
+				if (this->dots[i][j] && (this->i-3+i>19 || this->j-3+j >9 ||field->dots[this->i-3+i][this->j-3+j])){												
 					return true;
 				}
 			}
@@ -123,8 +122,22 @@ int main(){
 	Field *f=&F;
 	Tetramino T(5,3);
 	Tetramino* t=&T;
-	t->i=3;
+	t->i=2;
+	t->rotate(f);
 	t->placeto(f);
 	f->print();
 	return EXIT_SUCCESS;
 };
+/*
+ * Нужно еще подумать над системой функций, проверкой и тем, в какой момент она происходит.
+ * Почему-то не работает rotate
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * /
