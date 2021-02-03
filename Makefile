@@ -1,5 +1,5 @@
 final: tetfoo.o tetfoo.hpp main.o
-	g++ tetfoo.o main.o -o tetris24.out
+	g++ tetfoo.o main.o -o tetris24.out -lsfml-graphics -lsfml-window -lsfml-system
 
 start: final
 	./tetris24.out
