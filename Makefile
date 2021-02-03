@@ -1,3 +1,8 @@
+test4: test4.cpp
+	g++ test4.cpp -o test4.out -lsfml-graphics -lsfml-window -lsfml-system
+	./test4.out
+	rm test4.out
+
 test3: test3.cpp
 	g++ test3.cpp -o test3.out -lsfml-graphics -lsfml-window -lsfml-system
 	./test3.out
