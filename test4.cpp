@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-bool tetratypes[7][4][4]=
-	{
+constexpr bool DBG1=false;
+bool tetratypes[7][4][4]={
 		{				//O
 			{0,0,0,0},
 			{0,0,0,0},
@@ -39,12 +39,17 @@ bool tetratypes[7][4][4]=
 			{0,0,1,0}
 		}
 	};
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 struct Tetramino{
 	uint8_t i,j;
 	uint8_t dot[4][4];
 	char type;
 	Tetramino(uint8_t type, uint8_t color){
+		this->reset(type, color);
+	}
+	void reset(uint8_t type, uint8_t color){
 		switch(type){
 			case 0:
 				this->type='O';
@@ -91,6 +96,19 @@ struct Tetramino{
 		}
 		std::cout<<"\033[34;41;1m     END    \033[m\n";				
 	}
+	void rotate(){
+		uint8_t res[4][4];
+		for (uint8_t i=0; i<4;i++){
+			for (uint8_t j=0; j<4;j++){
+				res[j][3-i]=this->dot[i][j];
+			}
+		}
+		for (uint8_t i=0; i<4;i++){
+			for (uint8_t j=0; j<4;j++){
+				this->dot[i][j]=res[i][j];
+			}
+		}
+	}
 };
 struct Field{
 	uint8_t dot[20][10];
@@ -120,12 +138,37 @@ struct Field{
 };
 
 
+
 void tetragentest();
+/*
+ * Create all variants of tetramino (including colors) and print it
+*/
 void fieldgentest();
+/*
+ * Create new field, fill and print it and 
+*/
+bool everything_is_fine(Tetramino* t, Field* f);
+/*
+ * Check is current tetramino 't' position on the field 'f' correct
+*/
+void tetrado(uint8_t cmd, Tetramino* t, Field* f);
+/*
+ * 	do something with tetramino 't' on the field 'f'
+ * 	'l' - move tetramino left	
+ * 	'r' - move tetramino right		
+ * 	'R' - rotate tetramino
+ * 	'd' - drop
+*/
+void put(Tetramino* t, Field* f);
+/*
+ * Check possibility and put tetramino 't' to the field 'f'
+*/
 
 int main(){
 	srand(24);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+
 	return EXIT_SUCCESS;
 }
 void fieldgentest(){
@@ -141,8 +184,105 @@ void tetragentest(){
 	for (uint8_t type=0; type<7; type++){
 		for (uint8_t color=1; color<9; color++){
 			Tetramino T(type, color);
-			T.print();
+			for (uint8_t rotations=0; rotations<4; rotations++){
+				T.rotate();
+				T.print();
+			}
 		}
 	}
 	
 }
+bool everything_is_fine(Tetramino* t, Field* f){
+		if (DBG1){return true;}
+		uint8_t globali, globalj;
+		for (uint8_t i=0; i<4;i++){
+			for (uint8_t j=0; j<4;j++){
+				globali=t->i+i;
+				globalj=t->j+j;
+				if (t->dot[i][j] && (globali>=20 || globalj>=10)){	//outside the field
+					return false;
+				}
+				if (t->dot[i][j] && f->dot[globali][globalj]){		//intersection with field
+					return false;
+				}
+			}
+		}
+		return true;	//No intersections, tetramino in the field
+}
+void tetrado(uint8_t cmd, Tetramino* t, Field* f){
+	/*
+	 * 	do something
+	 * 	'l' - move tetramino left	
+	 * 	'r' - move tetramino right		
+	 * 	'R' - rotate tetramino
+	 * 	'd' - drop
+	*/
+	Tetramino R=*t;
+	Tetramino* r=&R;
+	switch(cmd){					//cmd manager
+		case 'l':
+			R.j--;		//moving R left
+			break;
+		case 'r':
+			R.j++;		//moving R right
+			break;
+		case 'R':
+			R.rotate();	//Hmmm... And yet it turns
+			break;
+		case 'd':
+			while (everything_is_fine(r,f)){	//moving it down
+				R.i++;							//and down
+			}
+			R.i--;								//one jump and...
+			break;
+		default:
+			throw "Incorrect command";
+	}
+	if (everything_is_fine(r,f)){	//OK, that's fine 					//TODO
+		*t=R;
+		return;
+	} else {						//OK, that's not fine
+		return;
+	}
+}
+void put(Tetramino* t, Field* f){	
+	uint8_t globali, globalj;
+		for (uint8_t i=0; i<4;i++){
+			for (uint8_t j=0; j<4;j++){
+				globali=t->i+i;
+				globalj=t->j+j;
+				if (t->dot[i][j] && (globali>=20 || globalj>=10)){	//outside the field
+					throw "Sorry, master, but i can't place this tetramino here";;
+				}
+				if (t->dot[i][j] && f->dot[globali][globalj]){		//intersection with field
+					throw "Sorry, master, but i can't place this tetramino here";
+				}
+				if (t->dot[i][j]){				//only if [i][j] exists
+					f->dot[globali][globalj]=t->dot[i][j];
+				}
+			}
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
