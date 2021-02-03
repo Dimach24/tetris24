@@ -1,8 +1,23 @@
+final: tetfoo.o tetfoo.hpp main.o
+	g++ tetfoo.o main.o -o tetris24.out
+
+start: final
+	./tetris24.out
+
+clean:
+	rm *.o
+	rm *.out
+
+tetfoo.o: tetfoo.cpp tetfoo.hpp
+	g++ tetfoo.cpp -c -o tetfoo.o
+
+main.o: main.cpp
+	g++ main.cpp -c -o main.o
+
 test4: test4.cpp
 	g++ test4.cpp -o test4.out -lsfml-graphics -lsfml-window -lsfml-system
 	./test4.out
 	rm test4.out
-
 test3: test3.cpp
 	g++ test3.cpp -o test3.out -lsfml-graphics -lsfml-window -lsfml-system
 	./test3.out

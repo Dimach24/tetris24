@@ -1,46 +1,5 @@
-#include <SFML/Graphics.hpp>
+#include "tetfoo.hpp"
 #include <iostream>
-constexpr bool DBG1=false;
-bool tetratypes[7][4][4]={
-		{				//O
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,1,1},
-			{0,0,1,1}
-		},{				//I
-			{0,0,0,1},	
-			{0,0,0,1},
-			{0,0,0,1},
-			{0,0,0,1}
-		},{				//S
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,1,1},
-			{0,1,1,0}
-		},{				//Z
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,1,1,0},
-			{0,0,1,1}
-		},{				//L
-			{0,0,0,0},
-			{0,0,1,0},
-			{0,0,1,0},
-			{0,0,1,1}
-		},{				//J
-			{0,0,0,0},
-			{0,0,0,1},
-			{0,0,0,1},
-			{0,0,1,1}
-		},{				//T
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,1,1,1},
-			{0,0,1,0}
-		}
-	};
-
-
 
 struct Tetramino{
 	uint8_t i,j;
@@ -137,40 +96,6 @@ struct Field{
 	}
 };
 
-
-
-void tetragentest();
-/*
- * Create all variants of tetramino (including colors) and print it
-*/
-void fieldgentest();
-/*
- * Create new field, fill and print it and 
-*/
-bool everything_is_fine(Tetramino* t, Field* f);
-/*
- * Check is current tetramino 't' position on the field 'f' correct
-*/
-void tetrado(uint8_t cmd, Tetramino* t, Field* f);
-/*
- * 	do something with tetramino 't' on the field 'f'
- * 	'l' - move tetramino left	
- * 	'r' - move tetramino right		
- * 	'R' - rotate tetramino
- * 	'd' - drop
-*/
-void put(Tetramino* t, Field* f);
-/*
- * Check possibility and put tetramino 't' to the field 'f'
-*/
-
-int main(){
-	srand(24);
-	
-	
-
-	return EXIT_SUCCESS;
-}
 void fieldgentest(){
 	Field F;
 	for (uint8_t i=0; i<20; i++){
@@ -180,6 +105,8 @@ void fieldgentest(){
 	}
 	F.print();
 }
+
+
 void tetragentest(){
 	for (uint8_t type=0; type<7; type++){
 		for (uint8_t color=1; color<9; color++){
@@ -192,6 +119,7 @@ void tetragentest(){
 	}
 	
 }
+
 bool everything_is_fine(Tetramino* t, Field* f){
 		if (DBG1){return true;}
 		uint8_t globali, globalj;
@@ -238,7 +166,7 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 		default:
 			throw "Incorrect command";
 	}
-	if (everything_is_fine(r,f)){	//OK, that's fine 					//TODO
+	if (everything_is_fine(r,f)){	//OK, that's fine
 		*t=R;
 		return;
 	} else {						//OK, that's not fine
@@ -263,26 +191,4 @@ void put(Tetramino* t, Field* f){
 			}
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
