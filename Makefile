@@ -3,10 +3,13 @@ final: tetfoo.o tetfoo.hpp main.o
 
 start: final
 	./tetris24.out
-
+rebuild: clean main.cpp tetfoo.cpp tetfoo.hpp
+	g++ main.cpp -c -o main.o
+	g++ tetfoo.cpp -c -o tetfoo.o
+	g++ tetfoo.o main.o -o tetris24.out -lsfml-graphics -lsfml-window -lsfml-system
+	./tetris24.out
 clean:
-	rm *.o
-	rm *.out
+	rm *.o; rm *.out; echo cleared
 
 tetfoo.o: tetfoo.cpp tetfoo.hpp
 	g++ tetfoo.cpp -c -o tetfoo.o

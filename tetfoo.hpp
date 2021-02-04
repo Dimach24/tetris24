@@ -138,6 +138,52 @@ struct Field{
 		}
 		std::cout<<"\033[34;41;1m     END    \033[m\n";				
 	}
+	uint16_t update(){
+		uint16_t result;
+		for (uint8_t i=0; i<20; i++){
+			bool is_full=true;
+			for (uint8_t j=0; j<10; j++){
+				if (!this->dot[i][j]){
+					is_full=false;
+					break;
+				}
+			}
+			if (is_full){
+				result++;
+				for (uint8_t j=0; j<10; j++){
+					this->dot[i][j]=0;
+				}
+				
+			}
+		}
+		this->drop();
+		return result;
+	}
+	void drop(){
+		bool its_correct=false;
+		while (!its_correct){
+			bool firstline=true;
+			its_correct=true;
+			for (uint8_t i=1; i<20; i++){;
+				bool line_is_empty=true;
+				for (uint8_t j=0; j<10; j++){
+					if (this->dot[i][j]){
+						line_is_empty=false;
+						break;
+					}
+				}
+				if (line_is_empty && !firstline){
+					its_correct=false;
+					for (uint8_t j=0; j<10; j++){
+						this->dot[i][j]=this->dot[i-1][j];
+						this->dot[i-1][j]=0;
+					}
+					break;
+				}
+				firstline=firstline&&line_is_empty;
+			}
+		}
+	}
 };
 
 
@@ -156,7 +202,7 @@ bool everything_is_fine(Tetramino* t, Field* f);
 							// position on the field 'f' correct
 
 
-void tetrado(Tetramino* t, Field* f);
+void tetrado(uint8_t cmd, Tetramino* t, Field* f);
 /*
  * 			do something with tetramino 't' on the field 'f'
  * 	'l' - move tetramino left	
@@ -165,9 +211,8 @@ void tetrado(Tetramino* t, Field* f);
  * 	'd' - drop
 */
 
-void moveright(Tetramino* t, Field* f);
-void moverdown(Tetramino* t, Field* f);
-void moveleft(Tetramino* t, Field* f);
+bool movedown(Tetramino* t, Field* f);
+
 
 
 void put(Tetramino* t, Field* f);

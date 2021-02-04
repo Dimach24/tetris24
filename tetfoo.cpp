@@ -24,28 +24,16 @@ void tetragentest(){
 	
 }
 
-void movedown(Tetramino* t, Field* f){
+bool movedown(Tetramino* t, Field* f){
 	t->i++;
 	if (!everything_is_fine(t,f)){
 		t->i--;
 		put(t,f);
+		return true;
 	}
-	
+	return false;
 }
-void moveright(Tetramino* t, Field* f){
-	t->j++;
-	if (!everything_is_fine(t,f)){
-		t->j--;
-	}
-	
-}
-void moveleft(Tetramino* t, Field* f){
-	t->j--;
-	if (!everything_is_fine(t,f)){
-		t->j++;
-	}
-	
-}
+
 
 bool everything_is_fine(Tetramino* t, Field* f){
 		if (DBG1){return true;}
@@ -78,10 +66,10 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 	Tetramino* r=&R;
 	switch(cmd){					//cmd manager
 		case 'l':
-			moveleft(t,f);		//moving R left
+			R.j--;		//moving R left
 			break;
 		case 'r':
-			moveright(t,f);		//moving R right
+			R.j++;		//moving R right
 			break;
 		case 'R':
 			R.rotate();	//Hmmm... And yet it turns
@@ -93,7 +81,10 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 			while (everything_is_fine(r,f)){	//moving it down
 				R.i++;							//and down
 			}
-			R.i--;								//one jump and...
+			R.i--;	
+			*t=R;							//one jump and...
+			movedown(t,f);
+			return;
 			break;
 		default:
 			throw "Incorrect command";
@@ -106,7 +97,22 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 	}
 }
 
-void put(Tetramino* t, Field* f){	
+void put(Tetramino* t, Field* f){
+	if (!everything_is_fine(t,f)){return;}//{throw "Sorry, master, but i can't place this tetramino here";}
+	uint8_t globali, globalj;
+	for (uint8_t i=0; i<4;i++){
+		for (uint8_t j=0; j<4;j++){
+			globali=t->i+i;
+			globalj=t->j+j;
+			uint8_t c=t->dot[i][j];
+			if (c){
+				f->dot[globali][globalj]=c;
+			}
+		}
+	}
+}
+	
+/*void put(Tetramino* t, Field* f){	
 	uint8_t globali, globalj;
 		for (uint8_t i=0; i<4;i++){
 			for (uint8_t j=0; j<4;j++){
@@ -123,5 +129,5 @@ void put(Tetramino* t, Field* f){
 				}
 			}
 		}
-}
+}*/
 
