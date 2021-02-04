@@ -24,6 +24,29 @@ void tetragentest(){
 	
 }
 
+void movedown(Tetramino* t, Field* f){
+	t->i++;
+	if (!everything_is_fine(t,f)){
+		t->i--;
+		put(t,f);
+	}
+	
+}
+void moveright(Tetramino* t, Field* f){
+	t->j++;
+	if (!everything_is_fine(t,f)){
+		t->j--;
+	}
+	
+}
+void moveleft(Tetramino* t, Field* f){
+	t->j--;
+	if (!everything_is_fine(t,f)){
+		t->j++;
+	}
+	
+}
+
 bool everything_is_fine(Tetramino* t, Field* f){
 		if (DBG1){return true;}
 		uint8_t globali, globalj;
@@ -41,6 +64,7 @@ bool everything_is_fine(Tetramino* t, Field* f){
 		}
 		return true;	//No intersections, tetramino in the field
 }
+
 void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 	/*
 	 * 	do something
@@ -48,18 +72,22 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 	 * 	'r' - move tetramino right		
 	 * 	'R' - rotate tetramino
 	 * 	'd' - drop
+	 * 	't' - tick
 	*/
 	Tetramino R=*t;
 	Tetramino* r=&R;
 	switch(cmd){					//cmd manager
 		case 'l':
-			R.j--;		//moving R left
+			moveleft(t,f);		//moving R left
 			break;
 		case 'r':
-			R.j++;		//moving R right
+			moveright(t,f);		//moving R right
 			break;
 		case 'R':
 			R.rotate();	//Hmmm... And yet it turns
+			break;
+		case 't':
+			movedown(t,f);	//Hmmm... And yet it turns
 			break;
 		case 'd':
 			while (everything_is_fine(r,f)){	//moving it down
@@ -77,6 +105,7 @@ void tetrado(uint8_t cmd, Tetramino* t, Field* f){
 		return;
 	}
 }
+
 void put(Tetramino* t, Field* f){	
 	uint8_t globali, globalj;
 		for (uint8_t i=0; i<4;i++){

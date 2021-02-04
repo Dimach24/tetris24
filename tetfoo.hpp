@@ -151,13 +151,12 @@ void tetragentest();		// Create all possible variants of
 void fieldgentest();		// Create new field, fill and print it and 
 
 
-
-bool everything_is_fine();
+bool everything_is_fine(Tetramino* t, Field* f);
 							// Check is current tetramino 't'
 							// position on the field 'f' correct
 
 
-void tetrado();
+void tetrado(Tetramino* t, Field* f);
 /*
  * 			do something with tetramino 't' on the field 'f'
  * 	'l' - move tetramino left	
@@ -166,8 +165,12 @@ void tetrado();
  * 	'd' - drop
 */
 
+void moveright(Tetramino* t, Field* f);
+void moverdown(Tetramino* t, Field* f);
+void moveleft(Tetramino* t, Field* f);
 
-void put();
+
+void put(Tetramino* t, Field* f);
 							// Check possibility and put 
 							// tetramino 't' to the field 'f'
 #endif
